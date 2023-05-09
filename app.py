@@ -13,7 +13,8 @@ def ping_map():
         message = "DiffuseHyperion did not screw up his server map"
         status_class = "success"
     except requests.exceptions.HTTPError as err:
-        message = f"DiffuseHyperion has ran into a skill issue, {err}"
+        code = str(err)[:3]
+        message = f"DiffuseHyperion has ran into a skill issue, error code {code}, {err}"
         status_class = "error"
 
     return render_template("index.html", message=message, status_class=status_class)
