@@ -10,14 +10,20 @@ def ping_map():
     try:
         response = requests.get(url)
         response.raise_for_status()
-        message = "DiffuseHyperion did not screw up his server map"
+
+        status = "Online!"
         status_class = "success"
     except requests.exceptions.HTTPError as err:
-        code = str(err)[:3]
-        message = f"DiffuseHyperion has ran into a skill issue, error code {code}, {err}"
+        code = int(str(err)[:3])
+
+        status = ""
+        if code == 502:
+            status = "Offline..."
+        else:
+            status = "Catastrophically Offline!"
         status_class = "error"
 
-    return render_template("index.html", message=message, status_class=status_class)
+    return render_template("index.html", status_class=status_class, status=status)
 
 if __name__ == "__main__":
     app.run()
