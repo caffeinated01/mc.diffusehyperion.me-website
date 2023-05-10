@@ -1,22 +1,52 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
-    <title>Map Pinger</title>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link
       rel="stylesheet"
       type="text/css"
       href="{{ url_for('static', filename='style.css') }}"
     />
     <script src="https://cdn.jsdelivr.net/gh/leonardosnt/mc-player-counter/dist/mc-player-counter.min.js"></script>
+    <title>Map Pinger</title>
   </head>
   <body>
-    <h1>Server Status</h1>
-    <div class="map-status">
-      <h3>Online Map: </h3>
-      <h2 class="{{ status_class }}">{{ status }}</h2>
-    </div>
-    <div class="mc-status">
-      <h3>MC Server: </h3>
+    <div id="main">
+      <h1 class="underline">Map Status</h1>
+      <h3 class="{{ map_status_class }}">{{ map_status }}</h3>
+      <h1 class="underline">Server Status</h1>
+      <h3 class="{{ server_status_class }}">{{ map_status }}</h3>
+      <h2>
+        There are
+        <span data-playercounter-ip="mc.diffusehyperion.me">0</span> players on
+        mc.diffusehyperion.me right now.
+      </h2>
+      <div id="links">
+        <div class="preview-container">
+          <a href="https://map.diffusehyperion.me">
+            <img
+              class="preview"
+              src="{{url_for('static', filename='map-preview.png')}}"
+              alt="Minecraft Server Map"
+            />
+          </a>
+          <a href="https://map.diffusehyperion.me">Minecraft Server Map</a>
+        </div>
+        <div class="preview-container">
+          <a href="info.html">
+            <img
+              class="preview"
+              src="{{url_for('static', filename='server-preview.png')}}"
+              alt="Minecraft Server Rules & IP"
+            />
+          </a>
+          <a href="{{url_for('template', filename='info.html')}}"
+            >Minecraft Server Rules & IP</a
+          >
+        </div>
+      </div>
     </div>
   </body>
 </html>
