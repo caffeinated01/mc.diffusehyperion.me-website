@@ -9,7 +9,6 @@
       type="text/css"
       href="{{ url_for('static', filename='style.css') }}"
     />
-    <script src="https://cdn.jsdelivr.net/gh/leonardosnt/mc-player-counter/dist/mc-player-counter.min.js"></script>
     <title>Map Pinger</title>
   </head>
   <body>
@@ -17,12 +16,15 @@
       <h1 class="underline">Map Status</h1>
       <h3 class="{{ map_status_class }}">{{ map_status }}</h3>
       <h1 class="underline">Server Status</h1>
-      <h3 class="{{ server_status_class }}">{{ map_status }}</h3>
-      <h2 class="server-info_{{ server_status_class }}">
-        There are
-        <span data-playercounter-ip="mc.diffusehyperion.me">0</span> players on
-        mc.diffusehyperion.me right now.
-      </h2>
+      <h3 class="{{ server_status_class }}">{{ server_status }}</h3>
+      <div class="server-info_{{ server_status_class }}">
+        <h2>
+          {{ server_player_list }} is currently on the server.
+        </h2>
+        <h4>
+          Ping: {{server_ping}}ms
+        </h4>
+      </div>
       <div id="links">
         <div class="preview-container">
           <a href="https://map.diffusehyperion.me">
