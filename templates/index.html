@@ -18,6 +18,11 @@
             $("#map_status").text(data.map_status);
             $("#map_status").removeClass("loading");
             $("#map_status").addClass(data.map_status_class);
+
+            if (data.map_status_class == "success") {
+              $("#map_preview_img").attr("src", "/static/map-preview.png");
+              $("#map_preview").attr("href", "https://map.diffusehyperion.me");
+            }
           }
         );
         $.getJSON('/ajax/server',
@@ -30,6 +35,7 @@
                 function(data) {
                   $("#server_player_string").text(data.server_player_string + " is currently on the server.");
                   $("#server_ping").text("Ping: " + Number(data.server_ping).toFixed(3) + "ms")
+
                   $("#server_stats").removeClass("server-info-hide")
                 }
               );
@@ -51,10 +57,11 @@
       </div>
       <div id="links">
         <div class="preview-container">
-          <a href="https://map.diffusehyperion.me">
+          <a id="map_preview">
             <img
+              id="map_preview_img"
               class="preview"
-              src="{{url_for('static', filename='map-preview.png')}}"
+              src="/static/map-grayscale-preview.png"
               alt="Minecraft Server Map"
             />
           </a>
