@@ -60,6 +60,11 @@ body {
   font-size: 24px;
 }
 
-.server-info_error {
+.loading {
+  color: gray;
+  font-size: 24px;
+}
+
+.server-info-hide {
   display: none;
 }

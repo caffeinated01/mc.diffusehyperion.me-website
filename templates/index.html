@@ -10,20 +10,44 @@
       href="{{ url_for('static', filename='style.css') }}"
     />
     <title>Map Pinger</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <script>
+      $(function() {
+        $.getJSON('/ajax/map',
+          function(data) {
+            $("#map_status").text(data.map_status);
+            $("#map_status").removeClass("loading");
+            $("#map_status").addClass(data.map_status_class);
+          }
+        );
+        $.getJSON('/ajax/server',
+          function(data) {
+            $("#server_status").text(data.server_status);
+            $("#server_status").removeClass("loading")
+            $("#server_status").addClass(data.server_status_class)
+            if (data.server_status_class == "success") {
+              $.getJSON('/ajax/stats',
+                function(data) {
+                  $("#server_player_string").text(data.server_player_string + " is currently on the server.");
+                  $("#server_ping").text("Ping: " + Number(data.server_ping).toFixed(3) + "ms")
+                  $("#server_stats").removeClass("server-info-hide")
+                }
+              );
+            }
+          }
+        );
+      });
+    </script>
   </head>
   <body>
     <div id="main">
       <h1 class="underline">Map Status</h1>
-      <h3 class="{{ map_status_class }}">{{ map_status }}</h3>
+      <h3 id="map_status" class="loading">Loading...</h3>
       <h1 class="underline">Server Status</h1>
-      <h3 class="{{ server_status_class }}">{{ server_status }}</h3>
-      <div class="server-info_{{ server_status_class }}">
-        <h2>
-          {{ server_player_list }} is currently on the server.
-        </h2>
-        <h4>
-          Ping: {{server_ping}}ms
-        </h4>
+      <h3 id="server_status" class="loading">Loading...</h3>
+      <div id="server_stats" class="server-info-hide">
+        <h2 id="server_player_string">{{ server_player_list }} is currently on the server.</h2>
+        <h4 id="server_ping">Ping: {{server_ping}}ms</h4>
       </div>
       <div id="links">
         <div class="preview-container">
