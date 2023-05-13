@@ -6,15 +6,6 @@ app = Flask(__name__)
 server_url = "mc.diffusehyperion.me"
 map_url = "https://map.diffusehyperion.me"
 
-
-@app.route("/")
-def index():
-    return render_template("index.html")
-
-@app.route('/info.html')
-def info():
-    return render_template("info.html")
-
 def name_list_to_string(name_list):
     if len(name_list) <= 0:
         return "Nobody"
@@ -33,6 +24,14 @@ def name_list_to_string(name_list):
             res += name
     return res
 
+@app.route("/")
+def index():
+    return render_template("index.html")
+
+@app.route('/info.html')
+def info():
+    return render_template("info.html")
+
 @app.route('/ajax/map')
 def ping_map():
     map_status = ""
@@ -45,14 +44,13 @@ def ping_map():
     except requests.exceptions.HTTPError as err:
         code = int(str(err)[:3])
         map_status = ""
-        # Main Server offline
-        if code == 502:
+        if code == 502: # Main Server offline
             map_status = "Offline..."
         else:
             map_status = "Catastrophically Offline!!!"
         map_status_class = "error"
-    # nginx record disabled
-    except requests.exceptions.SSLError:
+    except requests.exceptions.SSLError or requests.exceptions.ConnectionError or requests.exceptions.ConnectionTimeout:
+        print("SSLError")
         map_status = "Catastrophically Offline!!!"
         map_status_class = "error"
     return jsonify(map_status=map_status, map_status_class=map_status_class)
@@ -62,17 +60,18 @@ def ping_server():
     server_status = ""
     server_status_class = ""
     try:
-        JavaServer.lookup(server_url).ping()
+        server = JavaServer.lookup(server_url, timeout=3)
+        server.ping()
         server_status = "Online!"
         server_status_class = "success"
-    except:
+    except ConnectionRefusedError: # server is off
         server_status = "Offline..."
         server_status_class = "error"
     return jsonify(server_status=server_status, server_status_class=server_status_class)
 
 @app.route('/ajax/stats')
 def server_stats():
-    server = JavaServer.lookup(server_url)
+    server = JavaServer.lookup(server_url, timeout=3)
     server_player_list = []
     try:
         server_player_list = server.query().players.names
