@@ -1,3 +1,4 @@
+import subprocess
 import requests
 from flask import Flask, render_template, jsonify
 from mcstatus import JavaServer
@@ -81,6 +82,17 @@ def server_stats():
     server_player_string = name_list_to_string(server_player_list)
     server_ping = server.ping()
     return jsonify(server_player_string=server_player_string, server_ping=server_ping)
+
+# PI temp related stuff
+@app.route('/ajax/pitemp')
+def pi_temperature():
+    temperature = 0
+    try:
+        output = subprocess.check_output(["cat", "/sys/class/thermal/thermal_zone0/temp"])
+        temperature = int(output) / 1000.0
+    except:
+        temperature = "Error reading temperature"
+    return jsonify(temperature=temperature)
 
 if __name__ == "__main__":
     app.run()
